@@ -1,22 +1,44 @@
 Role Name
 =========
-
-A brief description of the role goes here.
-
+**ansible-zabbix-server-host**
+***simple zabbix-server setup configuration with Ansible Playbook***
+This is simple lightweight configuration repository will contain all setup's and needed to correctly configure a Zabbix Server
 Requirements
 ------------
+Operating systems
+-----------------
+- Red Hat
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Zabbix Version
+--------------
+Default **zabbix release 3.4**
+Also change zabbix release version in default variable file 
+zabbix_repo_package : ['https://repo.zabbix.com/zabbix/4.0/rhel/7/x86_64/zabbix-release-4.0-1.el7.noarch.rpm']
 
+Installation
+------------
+Use **runsetup.yml** file as host filerun playbook
+```sh
+$ ansible-playbook /path/runsetup.yml -i /path/inventory.txt
+```
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+| Variables | Descriptions   |
+|----------------|-------------------------------|
+| zabbix_repo_package | zabbix dependency variables   |
+|zabbix_server_mysql | zabbix server installation pakages     |
+|zabbix_conf_path          |  default configuration path        |
+|zabbix_server_path          |default server configuration path|
 
-Dependencies
-------------
-
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+Database
+--------
+| Variables | Descriptions   |
+|----------------|-------------------------------|
+| mysql_hostname | mysql user name (defaule: zabbix)   |
+|mysql_db_name | mysql database name (default: zabbix)      |
+|mysql_pass |  mysql zabbix user password (default: root123)        |
+|mysql_default_host | mysql host (default: localhost)|
 
 Example Playbook
 ----------------
@@ -30,9 +52,12 @@ Including an example of how to use your role (for instance, with variables passe
 License
 -------
 
-BSD
+MIT
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+This is my first attempt to create an ansible role, so please send suggestion or pull requests to make this role better.
+
+Github: https://github.com/sarath196/ansible-zabbix-server-host
+Mail: ksarath196@gmail.com
