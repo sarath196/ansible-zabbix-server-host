@@ -36,7 +36,7 @@ Database
 --------
 | Variables | Descriptions   |
 |----------------|-------------------------------|
-| mysql_hostname | mysql user name (defaule: zabbix)   |
+| mysql_hostname | mysql user name (default: zabbix)   |
 |mysql_db_name | mysql database name (default: zabbix)      |
 |mysql_pass |  mysql zabbix user password (default: root123)        |
 |mysql_default_host | mysql host (default: localhost)|
