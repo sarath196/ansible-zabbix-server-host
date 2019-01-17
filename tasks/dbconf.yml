@@ -1,0 +1,40 @@
+---
+# Configure Mariadb and Msql db services
+    - 
+      name: "Mariadb server install"
+      yum: 
+        name: mariadb-server
+        state: present
+      notify: start mariadb 
+      
+    - 
+      name: "Adds Python MySQL support on RedHat/CentOS"
+      yum: 
+        name: MySQL-python 
+        state: present
+      
+    - 
+      name: "start mariadb is running"
+      service: 
+        name: mariadb
+        state: started
+    
+    - 
+      name: "Set DB user name & password"
+      mysql_user: 
+        name: "{{mysql_hostname}}"
+        password: "{{mysql_pass}}"
+        priv: "{{mysql_hostname}}.*:ALL,GRANT"
+        state: present
+
+    - 
+      name: "Deletes anonymous MySQL server user for localhost"
+      mysql_user: "user=\"\" state=\"absent\""
+      
+    - 
+      name: "Create a new database"
+      mysql_db: "name={{mysql_db_name}} state=present collation=utf8_general_ci"
+      register: dbcreate
+      
+    - debug:
+        var: dbcreate

@@ -1,0 +1,115 @@
+---
+# Configure Zabbix server
+
+    - name: Install Zabbix packages
+      yum: 
+        name: mysql-devel   
+    
+    - 
+      name: Install Zabbix Repository Key 
+      rpm_key: 
+        state: present 
+        key: "{{zabbix_rpm_key}}"
+
+    - name: Install Zabbix Repository and other packages needed by Ansible
+      yum: 
+        pkg: "{{zabbix_repo_package}}"
+        state: installed  
+      
+    - name: Install Zabbix packages
+      yum: 
+        pkg: "{{zabbix_server_mysql}}"
+        state: installed
+      notify: start zabbix
+      
+    - name: Make sure A can connect to B database
+      mysql_db:
+        login_user: "{{mysql_hostname}}"
+        login_password: "{{mysql_pass}}"
+        login_host: "{{mysql_default_host}}"
+        name: "{{mysql_db_name}}"
+        state: present
+      register: dbstatus
+    
+    - debug:
+        var: dbstatus
+    - 
+      name: Copy create.sql file
+      shell: cp /usr/share/doc/zabbix-server-mysql-*/create.sql.gz  /etc/zabbix/ 
+      when: dbcreate.changed
+      
+    - 
+      name: UnZip
+      shell: gunzip -f /etc/zabbix/create.sql.gz
+      when: dbcreate.changed
+      
+    - 
+      name: Restore create.sql database
+      mysql_db:
+        name: zabbix
+        state: import
+        target: /etc/zabbix/create.sql
+      when: dbcreate.changed
+    
+    - 
+      name: Backup zabbix.conf
+      copy:
+         dest: "{{zabbix_conf_path}}.old"
+         remote_src: true
+         src: "{{zabbix_conf_path}}"
+         force: no
+
+    - 
+      name: Backup zabbix.conf
+      copy:
+         dest: "{{zabbix_server_path}}.old"
+         remote_src: true
+         src: "{{zabbix_server_path}}"
+         force: no
+
+    - 
+      name: Add Httpd Config
+      copy:
+         src: "files/{{zabbix_conf_file}}"
+         dest: "{{zabbix_conf_path}}"
+         owner: root
+         group: zabbix
+         mode: 0641
+    
+    - 
+      name: Disable SELinux
+      selinux:
+        state: disabled
+         
+    - 
+      name: Reboot machine to apply updates
+      reboot:
+          reboot_timeout: 3600
+         
+    - 
+      name: Backup zabbix_server.conf
+      copy:
+         src: "files/{{zabbix_server_file}}"
+         dest: "{{zabbix_server_path}}" 
+         owner: root
+         group: zabbix
+         mode: 0610
+      
+    - 
+      name: restart apache
+      service:
+        name: httpd
+        state: restarted
+        
+    - 
+      name: restart mariadb
+      service:
+          name: mariadb
+          state: restarted
+          
+    - 
+      name: restart zabbix
+      service:
+        name: zabbix-server
+        state: restarted
+    

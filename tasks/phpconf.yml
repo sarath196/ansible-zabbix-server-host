@@ -1,0 +1,82 @@
+---
+# Configure php setup's
+    - 
+      name: Install epel dependency
+      yum: 
+        name: epel-release
+        state: present
+    -
+      name: Install yum webtatic-release.rpm
+      yum:
+        name: "{{ php_webtatic_release }}"
+        state: present
+        
+    - 
+      name: Install PHP dependency packages
+      yum: 
+        name: "{{php_dependency_packages}}"
+        state: present
+        
+    -
+      name: Backup php.ini file
+      copy: 
+         dest: "{{php_ini_path}}.old"
+         remote_src: true
+         src: "{{php_ini_path}}"
+         force: no
+ 
+# replace php.ini config file lines
+    - 
+      name: Change max execution time
+      lineinfile:
+        path: "{{php_ini_path}}"
+        state: present
+        regexp: "^max_execution_time"
+        line: "max_execution_time = {{php_max_execution_time}}"
+        backrefs: yes
+
+    - 
+      name: Change max input time
+      lineinfile:
+        path: "{{php_ini_path}}"
+        state: present
+        regexp: "^max_input_time"
+        line: " max_input_time = {{php_max_input_time}}"
+        backrefs: yes
+
+    - 
+      name: Change memory limit
+      lineinfile:
+        path: "{{php_ini_path}}"
+        state: present
+        regexp: "^memory_limit"
+        line: " memory_limit = {{php_memory_limit}}"
+        backrefs: yes
+   
+    - 
+      name: Change post max size
+      lineinfile:
+        path: "{{php_ini_path}}"
+        state: present
+        regexp: "^post_max_size"
+        line: "post_max_size = {{php_post_max_size}}"
+        backrefs: yes
+
+    - 
+      name: Change upload max file size
+      lineinfile:
+        path: "{{php_ini_path}}"
+        state: present
+        regexp: "^upload_max_filesize"
+        line: "upload_max_filesize = {{php_upload_max_filesize}}"
+        backrefs: yes 
+    
+    - 
+      name: Change timezone
+      lineinfile:
+        path: "{{php_ini_path}}"
+        state: present
+        regexp: "^;date.timezone"
+        line: "date.timezone = {{php_date_timezone}}"
+        backrefs: yes
+      notify: start apache

@@ -1,0 +1,6 @@
+--- 
+-
+
+  hosts: '{{ target | default("all") }}'
+  roles:
+    - ansible-zabbix-server-host

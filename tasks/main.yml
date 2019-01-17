@@ -1,0 +1,14 @@
+---
+# tasks file for zabbix-server-role
+
+  - name: Install apache httpd
+    include_tasks: apacheconf.yml 
+    
+  - name: Install and configure php 
+    include_tasks: phpconf.yml
+    
+  - name: Install and configure Mariadb Mysql
+    include_tasks: dbconf.yml
+    
+  - name: Install and configure Zabbix-server
+    include_tasks: zabbixconf.yml

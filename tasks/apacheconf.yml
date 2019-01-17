@@ -1,0 +1,10 @@
+--- 
+# tasks file for Install httpd 
+    - 
+      name: Install apache httpd
+      yum: 
+        name: httpd
+        state: present
+      notify: start apache
+      
+      

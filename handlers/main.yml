@@ -1,0 +1,37 @@
+---
+# handlers file for zabbix-server-role
+  - name: start apache
+    service:
+        name: httpd
+        state: started
+        enabled: true
+        
+  - name: start mariadb
+    service:
+        name: mariadb
+        state: started
+        enabled: true
+        
+  - name: start zabbix
+    service:
+        name: zabbix-server
+        state: started
+        enabled: true
+        
+  - name: restart apache
+    service:
+        name: httpd
+        state: restarted
+        
+  - name: restart mariadb
+    service:
+        name: mariadb
+        state: restarted
+        
+  - name: restart zabbix
+    service:
+        name: zabbix-server
+        state: restarted
+        
+        
+  
