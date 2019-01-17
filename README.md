@@ -1,7 +1,8 @@
 Role Name
 =========
 **ansible-zabbix-server-host**
-***simple zabbix-server setup configuration with Ansible Playbook***
+
+simple zabbix-server setup configuration with Ansible Playbook, 
 This is simple lightweight configuration repository will contain all setup's and needed to correctly configure a Zabbix Server
 Requirements
 ------------
